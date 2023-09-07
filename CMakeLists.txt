@@ -5,6 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_NAME "drone")
 set(BUILD_NUMBER "1")
 
+set(PICO_BOARD pico_w)
 # Set Debug flag
 add_compile_definitions($<$<CONFIG:Debug>:DEBUG=1>)
 

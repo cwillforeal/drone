@@ -7,7 +7,7 @@
  *
  */
 #include "main.h"
-
+#include "ble.h"
 
 /*
  * GLOBALS
@@ -36,22 +36,17 @@ void led_task_pico(void* unused_arg) {
     uint8_t pico_led_state = 0;
     
     // Configure the Pico's on-board LED
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-    
     while (true) {
         // Turn Pico LED on an add the LED state
         // to the FreeRTOS xQUEUE
         log_debug("PICO LED FLASH");
         pico_led_state = 1;
-        gpio_put(PICO_DEFAULT_LED_PIN, pico_led_state);
         xQueueSendToBack(queue, &pico_led_state, 0);
         vTaskDelay(ms_delay);
         
         // Turn Pico LED off an add the LED state
         // to the FreeRTOS xQUEUE
         pico_led_state = 0;
-        gpio_put(PICO_DEFAULT_LED_PIN, pico_led_state);
         xQueueSendToBack(queue, &pico_led_state, 0);
         vTaskDelay(ms_delay);
     }
@@ -107,6 +102,7 @@ int main() {
     // Pause to allow the USB path to initialize
     sleep_ms(2000);
 
+    ble_init();
     // Set up two tasks
     // FROM 1.0.1 Store handles referencing the tasks; get return values
     // NOTE Arg 3 is the stack depth -- in words, not bytes
